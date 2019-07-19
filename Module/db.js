@@ -34,7 +34,7 @@ exports.register = (data, callback) => {
             if (err) {
                 callback({ message: "register failed", err });
             } else if (res == null) {
-                new userModel({username: data.username, password: data.password, name: data.name, personalID: data.personalID}).save(err => {
+                new userModel({username: data.username, password: data.password, name: data.name, personalID: data.personalID, penalty: 0}).save(err => {
                     if (err)
                         callback({ message: "register failed", err });
                     else
@@ -47,6 +47,40 @@ exports.register = (data, callback) => {
         });
     }
 };
+
+exports.getPenalty = (data, callback) => {
+    userModel.findOne({username: data.username}, (err, res) => {
+        if (err) {
+            callback({ message: "getPenalty failed", err });
+        } else if (res == null) {
+            callback({ message: "getPenalty failed", err: "user not found" });
+        } else {
+            callback({ message: "getPenalty complete", data: res.penalty });
+        }
+    })
+}
+
+exports.addPenalty = (data, callback) => {
+    userModel.findOne({username: data.username}, (err, res) => {
+        if (err) {
+            callback({ message: "addPenalty failed", err });
+        } else if (res == null) {
+            callback({ message: "addPenalty failed", err: "user not found" });
+        } else {
+            userModel.update({username: data.username}, {penalty: res.penalty+1}, err => {
+                if (err) {
+                    callback({ message: "addPenalty failed", err});
+                } else {
+                    if (res.penalty == 3) {
+                        userModel.deleteOne({username: data.username});
+                        registerKeyModel.deleteOne({personalID: res.personalID});
+                        callback({ message: "addPenalty success" });
+                    }
+                }
+            });
+        }
+    })
+}
 
 exports.certificate = (data, callback) => {
     registerKeyModel.findOne({registerkey: data.registerkey}, (err, res) => {
