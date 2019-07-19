@@ -1,3 +1,5 @@
+const db = require("../Module/db");
+
 exports.getrooms = (req, res) => {
     let data = {
         months: req.body.months,
