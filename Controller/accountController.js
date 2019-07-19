@@ -21,7 +21,8 @@ exports.register = (req, res) => {
         username: req.body.username,
         password: req.body.password,
         name: req.body.name,
-        personalID: req.body.personalID
+        personalID: req.body.personalID,
+        registerkey: req.body.registerkey
     };
 
     db.register(data, result => {

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const userModel = require("../Model/userMogooseModel");
 const roomModel = require("../Model/roomMogooseModel");
+const registerKeyModel = require("../Model/registerkeyMogooseModel");
+const config = require("../config");
 
 exports.initialize = config => {
     mongoose.connect(`mongodb://localhost/${config.name}`, {
@@ -9,32 +11,50 @@ exports.initialize = config => {
 };
 
 exports.login = (data, callback) => {
-    userModel.findOne({username: data.username, password: data.password}, (err, res) => {
-        if (err) {
-            callback({ message: "login failed", err });
-        } else if (res == null) {
-            callback({ message: "login failed", err: "user not found" });
-        } else {
-            callback({ message: "login complete" });
-        }
-    });
+    if (data.username == config.adminAccount.username && data.password == config.adminAccount.password) {
+        callback({ message: "login complete" });
+    } else {
+        userModel.findOne({username: data.username, password: data.password}, (err, res) => {
+            if (err) {
+                callback({ message: "login failed", err });
+            } else if (res == null) {
+                callback({ message: "login failed", err: "user not found" });
+            } else {
+                callback({ message: "login complete" });
+            }
+        });
+    }
 };
 
 exports.register = (data, callback) => {
-    userModel.findOne({username: data.username}, (err, res) => {
-        if (err) {
-            callback({ message: "register failed", err });
-        } else if (res == null) {
-            new userModel({username: data.username, password: data.password, name: data.name, personalID: data.personalID}).save(err => {
-                if (err)
-                    callback({ message: "register failed", err });
-                else
-                    callback({ message: "register complete" });
-            });
-        } else {
-            callback({ message: "register failed", err: "same username is already exist" });
-        }
-    });
+    if (data.username == config.adminAccount.username) {
+        callback({ message: "register failed", err: "same username is already exist"  });
+    } else {
+        userModel.findOne({username: data.username}, (err, res) => {
+            if (err) {
+                callback({ message: "register failed", err });
+            } else if (res == null) {
+                registerKeyModel.findOne({registerkey: data.registerkey}, (err, res) => {
+                    if (err) {
+                        callback({ message: "register failed", err});
+                    } else if (res == null) {
+                        callback({ message: "register failed", err: "key not found"});
+                    } else if (res.personalID != data.personalID) {
+                        callback({ message: "register failed", err: "invailed key"});
+                    } else {
+                        new userModel({username: data.username, password: data.password, name: data.name, personalID: data.personalID}).save(err => {
+                            if (err)
+                                callback({ message: "register failed", err });
+                            else
+                                callback({ message: "register complete" });
+                        });
+                    }
+                })
+            } else {
+                callback({ message: "register failed", err: "same username is already exist" });
+            }
+        });
+    }
 };
 
 exports.getroom = (data, callback) => {
@@ -94,17 +114,26 @@ exports.reserve = (data, callback) => {
 exports.cancel = (data, callback) => {
     roomModel.findOne({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time}, (err, res) => {
         if (err) {
-            callback({ message: "cancel failed", err});
+            callback({ message: "cancel failed", err });
         } else if (res == null) {
-            callback({ message: "cancel failed", err: "room not found"});
+            callback({ message: "cancel failed", err: "room not found" });
         } else {
             roomModel.deleteOne({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time}, (err, res) => {
                 if (err) {
-                    callback({ message: "cancel failed", err});
+                    callback({ message: "cancel failed", err });
                 } else {
                     callback({ message: "cancel complete"});
                 }
             })
         }
+    });
+}
+
+exports.getMonthRooms = (data, callback) => {
+    roomModel.find({months: data.months, username: data.username}, (err, res) => {
+        if (err)
+            callback({ message: "getMonthRooms failed", err });
+        else
+            callback({ message: "getMonthRooms complete", data: res });
     });
 }

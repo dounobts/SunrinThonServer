@@ -10,15 +10,25 @@ exports.reserve = (req, res) => {
         username: req.body.username,
         personalID: req.body.personalID
     };
-    db.reserve({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time, purpose: data.purpose, username: data.username, personalID: data.personalID}, result => {
-        if (result.err == "already reserved") {
-            res.status(403).json({status: "Forbidden", err: result.err});
-        } else if (result.err) {
+    db.getMonthRooms({months: data.months, username: data.username}, result => {
+        if (result.err) {
             res.status(500).json({status: "Internal Server Error", err: result.err});
         } else {
-            res.status(200).json({status: "Success"});
+            if (result.data.length > 20) {
+                res.status(403).json({status: "Forbidden", err: "over limit"});
+            } else {
+                db.reserve({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time, purpose: data.purpose, username: data.username, personalID: data.personalID}, result => {
+                    if (result.err == "already reserved") {
+                        res.status(403).json({status: "Forbidden", err: result.err});
+                    } else if (result.err) {
+                        res.status(500).json({status: "Internal Server Error", err: result.err});
+                    } else {
+                        res.status(200).json({status: "Success"});
+                    }
+                });
+            }
         }
-    });
+    })
 };
 
 exports.cancel = (req, res) => {
