@@ -1,21 +1,34 @@
-exports.rooms = (req, res) => {
+exports.getrooms = (req, res) => {
     let data = {
-        years: req.body.years,
         months: req.body.months,
         days: req.body.days,
         time: req.body.time
     };
-    res.send("Hello World");
+    db.getrooms({months: data.months, days: data.days, time: data.time}, result => {
+        if (result.err) {
+            res.status(500).json({status: "Internal Server Error", err: result.err});
+        } else {
+            res.status(200).json({status: "Success", data: result.data});
+        }
+    });
 };
 
 exports.getroom = (req, res) => {
     let data = {
-        username: req.body.username,
-        password: req.body.password,
-        name: req.body.name,
+        months: req.body.months,
+        days: req.body.days,
+        time: req.body.time,
         roomnumber: req.body.roomnumber
     };
-    res.send("Hello World");
+    db.getroom({months: data.months, days: data.days, time: data.time, roomnumber: data.roomnumber}, result => {
+        if (result.err == "room not found") {
+            res.status(404).json({status: "Not Found"});
+        } else if (result.err) {
+            res.status(500).json({status: "Internal Server Error", err: result.err});
+        } else {
+            res.status(200).json({status: "Success"});
+        }
+    });
 };
 
 exports.cancel = (req, res) => {
@@ -25,6 +38,15 @@ exports.cancel = (req, res) => {
         name: req.body.name,
         time: req.body.time,
         roomnumber: req.body.roomnumber,
+        username: req.body.username
     };
-    res.send("Hello World");
+    db.cancel({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time}, result => {
+        if (result.err == "room not found") {
+            res.status(404).json({status: "Not Found", err: result.err});
+        } else if (result.err) {
+            res.status(500).json({status: "Internal Server Error", err: result.err});
+        } else {
+            res.status(200).json({status: "Success"});
+        }
+    });
 };
