@@ -13,7 +13,18 @@ exports.getroom = (req, res) => {
         username: req.body.username,
         password: req.body.password,
         name: req.body.name,
-        personalID: req.body.personalID
+        roomnumber: req.body.roomnumber
+    };
+    res.send("Hello World");
+};
+
+exports.cancel = (req, res) => {
+    let data = {
+        username: req.body.username,
+        password: req.body.password,
+        name: req.body.name,
+        time: req.body.time,
+        roomnumber: req.body.roomnumber,
     };
     res.send("Hello World");
 };

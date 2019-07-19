@@ -35,3 +35,19 @@ exports.register = (data, callback) => {
         }
     });
 };
+
+exports.getroom = (data, callback) => {
+
+}
+
+exports.rooms = (data, callback) => {
+
+}
+
+exports.reserve = (data, callback) => {
+
+}
+
+exports.cancel = (data, callback) => {
+
+}
