@@ -5,7 +5,6 @@ const roomSchema = mongoose.Schema({
     days: Number,
     time: Number,
     roomnumber: Number,
-    purpose: String,
     username: String,
     personalID: Number
 });

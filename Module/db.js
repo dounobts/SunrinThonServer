@@ -118,7 +118,6 @@ exports.reserve = (data, callback) => {
                 days: data.days,
                 time: data.time,
                 roomnumber: data.roomnumber,
-                purpose: data.purpose,
                 username: data.username,
                 personalID: data.personalID
             });
