@@ -25,8 +25,8 @@ exports.register = (req, res) => {
     };
 
     db.register(data, result => {
-        if (result.err == "user not found") {
-            res.status(404).json({status: "Not Found"});
+        if (result.err == "same username is already exist") {
+            res.status(403).json({status: "Forbidden"});
         } else if (result.err) {
             res.status(500).json({status: "Internal Server Error", err: result.err});
         } else {
