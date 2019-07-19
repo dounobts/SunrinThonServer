@@ -1,6 +1,6 @@
 module.exports = {
     port: 8080,
     environment: 'dev',
-    key: 'secretJuJu',
+    key: 'DoUNoBTS',
     name: 'db'
 }

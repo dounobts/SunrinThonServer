@@ -23,12 +23,11 @@ exports.reserve = (req, res) => {
 
 exports.cancel = (req, res) => {
     let data = {
+        months: req.body.months,
+        days: req.body.days,
         username: req.body.username,
-        password: req.body.password,
-        name: req.body.name,
         time: req.body.time,
-        roomnumber: req.body.roomnumber,
-        username: req.body.username
+        roomnumber: req.body.roomnumber
     };
     db.getroom({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time, username: data.username}, result => {
         if (result.err == "room not found") {
@@ -79,6 +78,20 @@ exports.getrooms = (req, res) => {
         time: req.body.time
     };
     db.getrooms({months: data.months, days: data.days, time: data.time}, result => {
+        if (result.err) {
+            res.status(500).json({status: "Internal Server Error", err: result.err});
+        } else {
+            res.status(200).json({status: "Success", data: result.data});
+        }
+    });
+};
+
+exports.getallrooms = (req, res) => {
+    let data = {
+        months: req.body.months,
+        days: req.body.days
+    };
+    db.getallrooms({months: data.months, days: data.days}, result => {
         if (result.err) {
             res.status(500).json({status: "Internal Server Error", err: result.err});
         } else {

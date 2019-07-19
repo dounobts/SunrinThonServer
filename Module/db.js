@@ -59,6 +59,16 @@ exports.getrooms = (data, callback) => {
     });
 }
 
+exports.getallrooms = (data, callback) => {
+    roomModel.find({months: data.months, days: data.days}, (err, res) => {
+        if (err) {
+            callback({ message: "getallroom failed", err});
+        } else {
+            callback({ message: "getallroom complete", data: res});
+        }
+    });
+}
+
 exports.reserve = (data, callback) => {
     roomModel.findOne({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time}, (err, res) => {
         if (err) {

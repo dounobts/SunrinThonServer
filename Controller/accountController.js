@@ -1,5 +1,4 @@
 const db = require('../Module/db');
-const jwt = require("../Module/jwt");
 
 exports.login = (req, res) => {
     let data = {
@@ -12,9 +11,7 @@ exports.login = (req, res) => {
         } else if (result.err) {
             res.status(500).json({status: "Internal Server Error", err: result.err});
         } else {
-            res.status(200).json({status: "Success", token: jwt.encodeToken({
-                username: data.username
-            })});
+            res.status(200).json({status: "Success"});
         }
     });
 };

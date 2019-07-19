@@ -31,6 +31,20 @@ exports.getroom = (req, res) => {
     });
 };
 
+exports.getallrooms = (req, res) => {
+    let data = {
+        months: req.body.months,
+        days: req.body.days
+    };
+    db.getallrooms({months: data.months, days: data.days}, result => {
+        if (result.err) {
+            res.status(500).json({status: "Internal Server Error", err: result.err});
+        } else {
+            res.status(200).json({status: "Success", data: result.data});
+        }
+    });
+};
+
 exports.cancel = (req, res) => {
     let data = {
         username: req.body.username,
