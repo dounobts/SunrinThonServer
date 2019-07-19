@@ -34,28 +34,33 @@ exports.register = (data, callback) => {
             if (err) {
                 callback({ message: "register failed", err });
             } else if (res == null) {
-                registerKeyModel.findOne({registerkey: data.registerkey}, (err, res) => {
-                    if (err) {
-                        callback({ message: "register failed", err});
-                    } else if (res == null) {
-                        callback({ message: "register failed", err: "key not found"});
-                    } else if (res.personalID != data.personalID) {
-                        callback({ message: "register failed", err: "invailed key"});
-                    } else {
-                        new userModel({username: data.username, password: data.password, name: data.name, personalID: data.personalID}).save(err => {
-                            if (err)
-                                callback({ message: "register failed", err });
-                            else
-                                callback({ message: "register complete" });
-                        });
-                    }
-                })
+                new userModel({username: data.username, password: data.password, name: data.name, personalID: data.personalID}).save(err => {
+                    if (err)
+                        callback({ message: "register failed", err });
+                    else
+                        callback({ message: "register complete" });
+                });
+
             } else {
                 callback({ message: "register failed", err: "same username is already exist" });
             }
         });
     }
 };
+
+exports.certificate = (data, callback) => {
+    registerKeyModel.findOne({registerkey: data.registerkey}, (err, res) => {
+        if (err) {
+            callback({ message: "certificate failed", err});
+        } else if (res == null) {
+            callback({ message: "certificate failed", err: "key not found"});
+        } else if (res.personalID != data.personalID) {
+            callback({ message: "certificate failed", err: "invailed key"});
+        } else {
+            callback({ message: "certificate success"})
+        }
+    })
+}
 
 exports.getroom = (data, callback) => {
     roomModel.findOne({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time}, (err, res) => {
