@@ -162,6 +162,18 @@ exports.reserve = (data, callback) => {
     })
 }
 
+exports.getprofile = (data, callback) => {
+    userModel.findOne({username: data.username}, (err, res) => {
+        if (err) {
+            callback({ message: "getprofile failed", err });
+        } else if (res == null) {
+            callback({ message: "getprofile failed", err: "user not found" });
+        } else {
+            callback({ message: "getprofile success", data: res});
+        }
+    })
+}
+
 exports.cancel = (data, callback) => {
     roomModel.findOne({roomnumber: data.roomnumber, months: data.months, days: data.days, time: data.time}, (err, res) => {
         if (err) {

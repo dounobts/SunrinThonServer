@@ -75,6 +75,21 @@ exports.getroom = (req, res) => {
     });
 };
 
+exports.getprofile = (req, res) => {
+    let data = {
+        username: req.body.username
+    };
+    db.getprofile({username: data.username}, result => {
+        if (result.err == "user not found") {
+            res.status(404).json({status: "Not Found"});
+        } else if (result.err) {
+            res.status(500).json({status: "Internal Server Error", err: result.err});
+        } else {
+            res.status(200).json({status: "Success", data: result.data});
+        }
+    });
+};
+
 exports.getrooms = (req, res) => {
     let data = {
         months: req.body.months,

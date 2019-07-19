@@ -8,5 +8,6 @@ router.post('/getallrooms', (req, res) => reservationController.getallrooms(req,
 router.post('/getrooms', (req, res) => reservationController.getrooms(req, res));
 router.post('/getreservedrooms', (req, res) => reservationController.getreservedrooms(req, res));
 router.post('/getroom', (req, res) => reservationController.getroom(req, res));
+router.post('/getprofile', (req, res) => reservationController.getprofile(req, res));
 
 module.exports = router;
