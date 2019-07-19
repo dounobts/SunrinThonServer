@@ -49,7 +49,7 @@ exports.register = (data, callback) => {
 };
 
 exports.certificate = (data, callback) => {
-    registerKeyModel.findOne({registerkey: parseInt(data.registerkey)}, (err, res) => {
+    registerKeyModel.findOne({registerkey: data.registerkey}, (err, res) => {
         if (err) {
             callback({ message: "certificate failed", err});
         } else if (res == null) {
