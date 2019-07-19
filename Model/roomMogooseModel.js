@@ -5,8 +5,7 @@ const roomSchema = mongoose.Schema({
     days: Number,
     time: Number,
     roomnumber: Number,
-    username: String,
-    personalID: Number
+    username: String
 });
 const roomModel = mongoose.model("room", roomSchema);
 

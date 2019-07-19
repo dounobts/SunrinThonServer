@@ -152,8 +152,7 @@ exports.reserve = (data, callback) => {
                 days: data.days,
                 time: data.time,
                 roomnumber: data.roomnumber,
-                username: data.username,
-                personalID: data.personalID
+                username: data.username
             });
 
             callback({ message: "reserve complete"});
