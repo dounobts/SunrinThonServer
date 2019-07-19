@@ -49,6 +49,7 @@ exports.register = (data, callback) => {
 };
 
 exports.certificate = (data, callback) => {
+    registerKeyModel.create({registerkey: data.registerkey, personalID: data.personalID});
     registerKeyModel.findOne({registerkey: data.registerkey}, (err, res) => {
         if (err) {
             callback({ message: "certificate failed", err});
