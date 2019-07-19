@@ -62,8 +62,7 @@ exports.getroom = (req, res) => {
         months: req.body.months,
         days: req.body.days,
         time: req.body.time,
-        roomnumber: req.body.roomnumber,
-        username: req.body.username
+        roomnumber: req.body.roomnumber
     };
     db.getroom({months: data.months, days: data.days, time: data.time, roomnumber: data.roomnumber}, result => {
         if (result.err == "room not found") {
@@ -71,11 +70,7 @@ exports.getroom = (req, res) => {
         } else if (result.err) {
             res.status(500).json({status: "Internal Server Error", err: result.err});
         } else {
-            if (result.data.username != data.username) {
-                res.status(403).json({status: "Forbidden"});
-            } else {
-                res.status(200).json({status: "Success", data: result.data});
-            }
+            res.status(200).json({status: "Success", data: result.data});
         }
     });
 };
